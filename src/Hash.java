@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 public class Hash {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
