@@ -12,7 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
-public class FileAccess extends JFrame {
+public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
@@ -25,7 +25,7 @@ public class FileAccess extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FileAccess frame = new FileAccess();
+					Login frame = new Login();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +37,7 @@ public class FileAccess extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FileAccess() {
+	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
