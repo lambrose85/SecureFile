@@ -3,7 +3,7 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 public class Connect_SQL {
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws SQLException{
 		Connect_SQL con = new Connect_SQL();
 		Connection connect = con.dbconnect();
 		
@@ -13,6 +13,7 @@ public class Connect_SQL {
 			stmt = connect.prepareStatement("Select * from Professors");
 			ResultSet rs = stmt.executeQuery();
 			ResultSetMetaData rmd = rs.getMetaData();
+			printResultSet(rs,rmd);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -20,6 +21,20 @@ public class Connect_SQL {
 
 	}
 	
+	public static void printResultSet(ResultSet rs, ResultSetMetaData rmd){
+		try{
+			int columns = rmd.getColumnCount();
+			while(rs.next()){
+				for(int i=1; i<= columns; i++){
+					System.out.println(rs.getString(i)+" ");
+				}
+				System.out.println();
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 	
 	public static Connection dbconnect(){
 		try{
