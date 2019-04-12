@@ -39,7 +39,7 @@ public class Connect_SQL {
 	public static Connection dbconnect(){
 		try{
 			Class.forName("oracle.jdbc.OracleDriver");
-			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","lambrose","4uhNcRMq");
+			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","","");
 			
 			return conn;
 		}
