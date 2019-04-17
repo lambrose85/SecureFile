@@ -3,7 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import java.math.BigInteger;
 public class Hash {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
@@ -15,8 +15,9 @@ public class Hash {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		
+	
 	}
 	public static String getFileChecksum(MessageDigest digest, File file)throws IOException{
 		FileInputStream fis = new FileInputStream(file);
@@ -39,4 +40,21 @@ public class Hash {
 	    
 	}
 
+	public  String hashPassword(String pass){
+		try{
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+		
+			byte[] messageDigest = md.digest(pass.getBytes());
+			BigInteger no = new BigInteger(1, messageDigest);
+			String hashtext = no.toString(16);
+			while(hashtext.length()<32){
+				hashtext = "0"+hashtext;
+			}
+			return hashtext;
+		
+		}
+		catch(NoSuchAlgorithmException e){
+				throw new RuntimeException(e);
+		}
+	}
 }

@@ -10,7 +10,7 @@ public class Connect_SQL {
 		
 		try {
 			PreparedStatement stmt;
-			stmt = connect.prepareStatement("Select * from Professors");
+			stmt = connect.prepareStatement("Select * from SecureUsers");
 			ResultSet rs = stmt.executeQuery();
 			ResultSetMetaData rmd = rs.getMetaData();
 			printResultSet(rs,rmd);
@@ -39,7 +39,7 @@ public class Connect_SQL {
 	public static Connection dbconnect(){
 		try{
 			Class.forName("oracle.jdbc.OracleDriver");
-			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","","");
+			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","lambrose","4uhNcRMq");
 			
 			return conn;
 		}
