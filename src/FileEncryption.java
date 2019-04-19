@@ -1,3 +1,6 @@
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,7 +10,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
-public class FileEncryption {
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+
+public class FileEncryption{
+
+	/**
+	 * 
+	 */
 
 	private static final int[][] sbox = {
 		{0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76},
@@ -26,7 +40,6 @@ public class FileEncryption {
 		{0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e},
 		{0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf},
 		{0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}};
-	
 	private static final int[][] invSbox = {
 		{0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb},
 		{0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb},
@@ -87,7 +100,9 @@ public class FileEncryption {
 	private byte[] key = new byte[16];
 	private byte[] iv = new byte[16];
 	
-	public FileEncryption(String path, byte[] k) {
+	Progress p = new Progress();
+	
+	public FileEncryption(String path, byte[] k, byte[] i) {
 		
 		try {
 		file = new File(path);
@@ -95,63 +110,12 @@ public class FileEncryption {
 			
 		}
 		key = k;
+		iv = i;
 		
 	}
 	
 	public void fileEncrypt(String path) throws IOException {
 		
-		int bytes = (int) file.length();
-		
-		byte[] d = Files.readAllBytes(file.toPath());
-		byte[][] data;
-		
-		if(file.length()%16==0) {
-			data = new byte[d.length/16][16];
-		}
-		else {
-			data = new byte[d.length/16+1][16];
-		}
-		
-
-		int index = 0;
-		for(int i=0;i<d.length;i+=16) {
-			try {
-			System.arraycopy(d, i, data[index], 0, 16);
-			}catch(Exception e) {
-				System.arraycopy(d, i, data[index], 0, (int) (file.length()%16));
-			}
-			index++;
-		}
-
-		//encrypts data
-		for(int i=0;i<data.length;i++) {
-			data[i] = encrypt(data[i], key);
-		}
-
-		
-		index = 0;
-		for(int i=0;i<d.length;i+=16) {
-			try {
-				System.arraycopy(data[index], 0, d, i, 16);
-			}catch(Exception e) {
-				System.arraycopy(data[index], 0, d, i, (int) (file.length()%16));
-			}
-			index++;
-		}
-		
-		OutputStream os = null;
-		
-		try {
-			os = new FileOutputStream(new File(path));
-			os.write(d);
-			os.close();
-		}catch(Exception e) {
-			
-		}
-		
-		
-		
-		/*
 		int bytes = (int) file.length();
 		
 		byte[] d = Files.readAllBytes(file.toPath());
@@ -174,10 +138,14 @@ public class FileEncryption {
 				index++;
 			}
 		}
-		
+
+		int total=0;
 		//encrypts data
 		for(int i=0;i<data.length;i++) {
+			xor(iv, data[i]);
 			data[i] = encrypt(data[i], key);
+			iv = data[i];
+			total+=16;
 		}
 		
 		index=0;
@@ -199,10 +167,19 @@ public class FileEncryption {
 		}catch(Exception e) {
 			
 		}
-		*/
+
 	}
 	
-	public void fileDecrypt(String path) throws IOException {		
+	
+	private void xor(byte[] i, byte[] d) {
+		
+		for(int j=0;j<16;j++) {
+			d[j] = (byte) (i[j]^d[j]);
+		}
+		
+	}
+
+	public void fileDecrypt(String path) throws IOException {
 		
 		int bytes = (int) file.length();
 		
@@ -227,11 +204,18 @@ public class FileEncryption {
 			index++;
 		}
 
-		//decrypts data
+
+
+
+		//encrypts data
 		for(int i=0;i<data.length;i++) {
+			byte[] temp = data[i];
 			data[i] = decrypt(data[i], key);
+			xor(iv,data[i]);
+			iv = temp;
 		}
 
+		
 		index = 0;
 		for(int i=0;i<d.length;i+=16) {
 			try {
@@ -251,7 +235,7 @@ public class FileEncryption {
 		}catch(Exception e) {
 			
 		}
-	
+
 	}
 	
 	public static byte[] decrypt(byte[] input, byte[] k) {
@@ -272,6 +256,7 @@ public class FileEncryption {
 		invSubBytes(state);
 		addRoundKey(state, to_state(get_curr_key(keys, 0)));
 		
+
 		int index = 0;
 		for(int i=0;i<4;i++) {
 			for(int j=0;j<4;j++) {
@@ -483,15 +468,17 @@ public class FileEncryption {
 	
 	private static byte GFMult(byte a, byte b) {
 		
-		if(a==0||b==0)return 0;
-		
-		int c = lTable[a & 0xFF]+lTable[b & 0xFF];
-		
-		if(c > 0xFF) {
-			c = c - 0xFF;
+		if(a==0||b==0) {
+			return 0;
 		}
 		
-		return (byte) eTable[c & 0xFF];
+		int z = lTable[a & 0xFF]+lTable[b & 0xFF];
+		
+		if(z > 0xFF) {
+			z = z - 0xFF;
+		}
+		
+		return (byte) eTable[z & 0xFF];
 
 	}
 	
