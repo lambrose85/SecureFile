@@ -7,6 +7,8 @@ import java.math.BigInteger;
 public class Hash {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
+		AccessFile af = new AccessFile();
+		
 		File file = new File("C:\\Users\\Lucas A\\Desktop\\410READ\\sample.txt");
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		try {
