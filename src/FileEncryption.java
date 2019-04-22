@@ -161,6 +161,7 @@ public class FileSystem {
 	}
 
 	private void updateDirecory() {
+		listModel.removeAllElements();
 		ArrayList<String> files = getFiles(workingDirectory);
 		
 		for(int i=0;i<files.size();i++) {
