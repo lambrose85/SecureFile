@@ -100,7 +100,6 @@ public class FileEncryption{
 	private byte[] key = new byte[16];
 	private byte[] iv = new byte[16];
 	
-	Progress p = new Progress();
 	
 	public FileEncryption(String path, byte[] k, byte[] i) {
 		

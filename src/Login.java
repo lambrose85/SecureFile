@@ -123,6 +123,23 @@ public class Login extends JFrame {
 					System.out.println(rs);
 					if(rs.next()){
 						JOptionPane.showMessageDialog(null, "login successful");
+						EventQueue.invokeLater(new Runnable() {
+							public void run() {
+								try {
+									FileSystem window = new FileSystem();
+									window.frame.setVisible(true);
+									window.setUserName(getUser());
+									window.setPassword(pass);
+									setVisible(false);
+									dispose();
+									
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						});
+
+						
 					
 					}else{
 						JOptionPane.showMessageDialog(null, "Invalid Credentials!!!!");
