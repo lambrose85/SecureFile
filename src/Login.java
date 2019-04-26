@@ -120,7 +120,7 @@ public class Login extends JFrame {
 					Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","lambrose","4uhNcRMq");
 					PreparedStatement ps = conn.prepareStatement("Select * from SecureUsers where username = '"+getUser()+"' and password='"+hash+"'");
 					ResultSet rs = ps.executeQuery();
-					System.out.println(rs);
+					
 					if(rs.next()){
 						JOptionPane.showMessageDialog(null, "login successful");
 						EventQueue.invokeLater(new Runnable() {
