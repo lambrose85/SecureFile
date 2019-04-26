@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JScrollPane;
@@ -127,6 +128,11 @@ public class FileSystem {
 				
 				entry = entry + ".enc";
 				
+				String iv = generateIV();
+				
+				//send workingDirectory, entry, and iv 
+				
+				
 				//test file size
 				File test = new File(path);
 				int bytes = (int) test.length();
@@ -136,7 +142,7 @@ public class FileSystem {
 				}
 				
 				
-				FileEncryption f = new FileEncryption(path,hex_to_char("6d79706f726e7069637475726573"),hex_to_char("ffffffffffffffffffffffffffffffff"));
+				FileEncryption f = new FileEncryption(path,hex_to_char("6d79706f726e7069637475726573"),hex_to_char(iv));
 				try {
 					f.fileEncrypt(workingDirectory + "\\" + entry);
 				} catch (IOException e1) {
@@ -225,14 +231,24 @@ public class FileSystem {
 		frame.getContentPane().add(btnTitle);
 
 		
-
-		
 	}
 
     private static void message(String message, String title){
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 	
+	private static String generateIV() {
+		Random r = new Random();
+		String out = "";
+		
+		for(int i=0;i<32;i++) {
+			out += String.format("%x", (r.nextInt(16)));
+		}
+		
+		return out;
+		
+	}
+    
 	private void updateDirecory() {
 		listModel.removeAllElements();
 		ArrayList<String> files = getFiles(workingDirectory);
