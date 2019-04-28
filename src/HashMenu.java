@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.sql.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -7,15 +8,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.awt.event.ActionListener;
 import java.awt.Label;
 import java.awt.Font;
 
 public class HashMenu extends JFrame {
+	
 	public String userName;
 	public String password;
 	
@@ -33,7 +31,36 @@ public class HashMenu extends JFrame {
 		return password;
 	}
 	private JPanel contentPane;
-
+	public static void printResultSet(ResultSet rs, ResultSetMetaData rmd, TextArea TA){
+		try{
+			int columns = rmd.getColumnCount();
+			while(rs.next()){
+				for(int i=1; i<= columns; i++){
+					System.out.println(rs.getString(i)+" ");
+					TA.append(rs.getString(i)+" ");
+				}
+				System.out.println();
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	public static void printMyFiles(ResultSet rs, ResultSetMetaData rmd, TextArea TA){
+		try{
+			int columns = rmd.getColumnCount();
+			while(rs.next()){
+				for(int i=1; i<= columns; i++){
+					TA.append(rs.getString(i)+" ");
+				}
+				System.out.println();
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -54,6 +81,7 @@ public class HashMenu extends JFrame {
 	 * Create the frame.
 	 */
 	public HashMenu() {
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -91,13 +119,20 @@ public class HashMenu extends JFrame {
 		label.setBounds(156, 10, 122, 39);
 		contentPane.add(label);
 		
-		myFiles.addActionListener(new ActionListener(){
+		
+		
+		
+		myFiles.addActionListener(new ActionListener()
+		{
 			public void actionPerformed(ActionEvent e){
-				String uname = getuserName();
+				String uname = "lambrose";
 				try{
 					Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","lambrose","4uhNcRMq");
-					PreparedStatement ps = conn.prepareStatement("Select * from SecureUsers where username = '"+uname+"'");
+					//Need to replace with a file query
+					PreparedStatement ps = conn.prepareStatement("Select * from SecureFiles");
 					ResultSet rs = ps.executeQuery();
+					ResultSetMetaData rmd = rs.getMetaData();
+					printResultSet(rs,rmd,textArea);
 				}catch(SQLException c){
 					c.printStackTrace();
 				}
