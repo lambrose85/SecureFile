@@ -83,43 +83,59 @@ public class HashMenu extends JFrame {
 	public HashMenu() {
 	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 546, 333);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JButton myFiles = new JButton("My Files");
-		myFiles.setBounds(321, 78, 103, 23);
+		myFiles.setBounds(414, 78, 103, 23);
 		contentPane.add(myFiles);
 		
 		JButton Authenticate = new JButton("Authenticate");
-		Authenticate.setBounds(321, 112, 103, 23);
+		Authenticate.setBounds(414, 112, 103, 23);
 		contentPane.add(Authenticate);
 		
 		JButton Remove = new JButton("Remove");
-		Remove.setBounds(321, 146, 103, 23);
+		Remove.setBounds(414, 146, 103, 23);
 		contentPane.add(Remove);
 		
 		JButton Add = new JButton("Add");
-		Add.setBounds(321, 180, 103, 23);
+		Add.setBounds(414, 180, 103, 23);
 		contentPane.add(Add);
 		
 		JButton Retrieve = new JButton("New button");
-		Retrieve.setBounds(321, 215, 103, 23);
+		Retrieve.setBounds(414, 215, 103, 23);
 		contentPane.add(Retrieve);
 		
 		TextArea textArea = new TextArea();
-		textArea.setBounds(36, 78, 266, 160);
+		textArea.setBounds(30, 93, 350, 191);
 		contentPane.add(textArea);
 		
 		Label label = new Label("Hash Menu");
 		label.setFont(new Font("Dialog", Font.PLAIN, 20));
 		label.setAlignment(Label.CENTER);
-		label.setBounds(156, 10, 122, 39);
+		label.setBounds(297, 0, 122, 39);
 		contentPane.add(label);
 		
-		
+		Remove.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e){
+				try{
+				String filename = "TEST";
+				Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@131.230.133.11:1521:cs","lambrose","4uhNcRMq");
+				//Prepared statement to remove entered fil
+				PreparedStatement ps = conn.prepareStatement("delete from SecureFiles where filename = '"+filename+"'");
+				ResultSet rs = ps.executeQuery();
+				ResultSetMetaData rmd = rs.getMetaData();
+				}
+				catch(SQLException arg0){
+					arg0.printStackTrace();
+				}
+			}
+			
+		});
 		
 		
 		myFiles.addActionListener(new ActionListener()
